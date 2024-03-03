@@ -48,11 +48,6 @@ import React from "react";
 import PromptList from "../components/PromptList";
 
 export default function Home() {
-  const loadMorePrompts = () => {
-    // Here you would typically update the state with the new prompts fetched from the API
-    console.log("Load more prompts");
-  };
-
   return (
     <PageLayout>
       <div className="container mx-auto my-8">
