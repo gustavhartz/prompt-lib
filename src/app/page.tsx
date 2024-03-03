@@ -1,56 +1,50 @@
-// samplePrompts.ts
-import { Prompt } from "../interfaces/Prompt";
+"use client";
+import React, { useState, ChangeEvent } from "react";
 import PageLayout from "../components/PageLayout"; // Adjust the path as necessary
-
-const samplePrompts: Prompt[] = [
-  {
-    id: 1,
-    rank: 1,
-    title: "The Philosophical Paradox",
-    description: "A prompt that explores the famous Ship of Theseus paradox.",
-    tags: ["philosophy", "paradox", "thought-experiment"],
-    upVotes: 120,
-    downVotes: 10,
-    userVote: 0,
-    isFavorite: false,
-    author: "User123",
-  },
-  {
-    id: 2,
-    rank: 2,
-    title: "The Ultimate Recipe Generator",
-    description:
-      "This prompt asks the AI to create unique recipes based on the ingredients in your pantry.",
-    tags: ["cooking", "AI", "creativity"],
-    upVotes: 95,
-    downVotes: 5,
-    userVote: 1,
-    isFavorite: true,
-    author: "ChefAI",
-  },
-  {
-    id: 3,
-    rank: 3,
-    title: "The Time Travel Conundrum",
-    description:
-      "A narrative prompt challenging the AI to construct a story where time travel creates a closed causal loop.",
-    tags: ["science-fiction", "time-travel", "storytelling"],
-    upVotes: 87,
-    downVotes: 3,
-    userVote: -1,
-    isFavorite: false,
-    author: "SciFiFan42",
-  },
-  // ... add more samples as needed
-];
-// pages/index.tsx
-import React from "react";
 import PromptList from "../components/PromptList";
+import { samplePrompts } from "../utilities/samplePrompts"; // Ensure this import path is correct
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Function to handle the search input change with proper typing
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    // Here you would typically debounce this function and call your API
+    // to filter the prompts based on the search term.
+    console.log("Search term:", event.target.value);
+  };
+
+  // Placeholder for a function to handle submitting a new prompt
+  // This could open a modal, redirect to a form page, or inline form display
+  const handleSubmitPrompt = () => {
+    console.log("Submit prompt clicked");
+    // Implement submission logic or redirection here
+  };
+
   return (
     <PageLayout>
       <div className="container mx-auto my-8">
+        <h1 className="text-center text-2xl font-bold mb-4">
+          Trending Prompts
+        </h1>
+        <p className="text-center text-gray-600 mb-8">
+          Explore and contribute to the community-driven prompt library.
+        </p>
+        <div className="flex justify-between items-center mb-4">
+          <input
+            type="search"
+            placeholder="Search prompts..."
+            onChange={handleSearchChange}
+            className="px-4 py-2 border rounded-lg w-1/3" // Adjusted the width to 1/3 of the space
+          />
+          <button
+            onClick={handleSubmitPrompt}
+            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
+          >
+            Submit Prompt
+          </button>
+        </div>
         <PromptList initialPrompts={samplePrompts} />
       </div>
     </PageLayout>
