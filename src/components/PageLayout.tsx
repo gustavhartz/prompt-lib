@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Sidebar from "./Sidebar"; // Assuming Sidebar is in the components folder
 import { useUser } from "@auth0/nextjs-auth0/client";
