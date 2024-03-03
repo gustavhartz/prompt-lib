@@ -10,6 +10,7 @@ import {
   FaTrain,
   FaWandSparkles,
   FaInfo,
+  FaPerson,
 } from "react-icons/fa6";
 
 interface NavItem {
@@ -24,6 +25,7 @@ const navItems: NavItem[] = [
   { href: "/rankings", icon: FaTrophy, title: "Leaderboard" },
   { href: "/likes", icon: FaHeart, title: "Likes" },
   { href: "/about", icon: FaInfo, title: "About" },
+  { href: "/profile", icon: FaPerson, title: "Profile" },
 ];
 
 const Sidebar: React.FC = () => {
@@ -58,10 +60,13 @@ const Sidebar: React.FC = () => {
           ))}
         </nav>
         <div className="mt-auto">
-          <button className="w-32 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
+          <a
+            href="/api/auth/login"
+            className="w-32 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
             <FaWandSparkles className="inline mr-2" />
-            Sign In
-          </button>
+            Sign In/Up
+          </a>
         </div>
       </div>
     </div>

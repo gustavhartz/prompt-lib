@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+Create a .env.local file that contains the envs for Auth0
+
 First, run the development server:
 
 ```bash
