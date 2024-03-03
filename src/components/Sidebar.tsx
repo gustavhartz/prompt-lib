@@ -22,13 +22,18 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/", icon: FaHouse, title: "Home" },
-  { href: "/rankings", icon: FaTrophy, title: "Leaderboard" },
-  { href: "/likes", icon: FaHeart, title: "Likes" },
+  { href: "/rankings", icon: FaTrophy, title: "Rankings" },
+  { href: "/likes", icon: FaHeart, title: "Favorites" },
   { href: "/about", icon: FaInfo, title: "About" },
   { href: "/profile", icon: FaPerson, title: "Profile" },
 ];
 
-const Sidebar: React.FC = () => {
+// include isAuthed in the props
+interface SidebarProps {
+  isAuthed: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isAuthed }) => {
   const pathname = usePathname(); // Use usePathname to get the current path
 
   return (
@@ -60,13 +65,22 @@ const Sidebar: React.FC = () => {
           ))}
         </nav>
         <div className="mt-auto">
-          <a
-            href="/api/auth/login"
-            className="w-32 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            <FaWandSparkles className="inline mr-2" />
-            Sign In/Up
-          </a>
+          {(!isAuthed && (
+            <a
+              href="/api/auth/login"
+              className="w-32 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              <FaWandSparkles className="inline mr-2" />
+              Sign in
+            </a>
+          )) || (
+            <a
+              href="/api/auth/logout"
+              className="w-32 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Logout
+            </a>
+          )}
         </div>
       </div>
     </div>
