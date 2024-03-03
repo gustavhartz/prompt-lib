@@ -2,7 +2,7 @@
 import { Prompt } from "../interfaces/Prompt";
 import PageLayout from "../components/PageLayout"; // Adjust the path as necessary
 
-export const samplePrompts: Prompt[] = [
+const samplePrompts: Prompt[] = [
   {
     id: 1,
     rank: 1,
