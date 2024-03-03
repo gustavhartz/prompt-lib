@@ -7,9 +7,9 @@ interface PageLayoutProps {
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <Sidebar />
-      <main className="flex-1 ml-64 p-8">{children}</main>
+      <main className="flex-1 ml-64 p-8 w-max ">{children}</main>
     </div>
   );
 };
