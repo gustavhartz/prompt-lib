@@ -3,8 +3,14 @@ import React, { useState, ChangeEvent } from "react";
 import PageLayout from "../components/PageLayout"; // Adjust the path as necessary
 import PromptList from "../components/PromptList";
 import { samplePrompts } from "../utilities/samplePrompts"; // Ensure this import path is correct
+import prisma from "../prisma";
+import { Post, Prisma } from "@prisma/client"; // Assuming you have your Prisma client set up
 
-export default function Home() {
+interface HomeProps {
+  prompts: ""; // Assuming your Post model corresponds to your prompts
+}
+
+export default function Home({ prompts }: HomeProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Function to handle the search input change with proper typing

@@ -32,9 +32,7 @@ const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
           href={promptDetailPath}
           className="flex items-center space-x-4 flex-1"
         >
-          {/* Remove the <a> tag and apply styles or classes directly to Link */}
-          <span className="text-2xl font-bold mr-8">#{prompt.rank}</span>
-          <div className="flex-1">
+          <div className="ml-4 flex-1">
             <h3 className="text-xl font-semibold">
               {prompt.title}
               <span className="text-xs text-gray-500 font-normal ml-2">

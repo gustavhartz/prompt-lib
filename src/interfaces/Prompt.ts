@@ -1,7 +1,6 @@
 // interfaces/Prompt.ts
 export interface Prompt {
   id: number;
-  rank: number;
   title: string;
   description: string;
   tags: string[];
