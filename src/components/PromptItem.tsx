@@ -24,7 +24,6 @@ const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
 
   // redirect path
   const promptDetailPath = `/prompt/${prompt.id}`;
-
   return (
     <div className="flex items-center justify-between p-4 border-b border-gray-200">
       <div className="flex items-center space-x-4">
