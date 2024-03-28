@@ -2,7 +2,7 @@
 import React from "react";
 import Sidebar from "./Sidebar"; // Assuming Sidebar is in the components folder
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { AiOutlineLoading3Quarters } from "react-icons/ai"; // Ensure this import is added
+import LoadingScreen from "./LoadingScreen"; // Assuming LoadingScreen is in the components folder
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -14,11 +14,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   // TODO: Style loading and pass user to sidebar
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <AiOutlineLoading3Quarters className="animate-spin text-4xl text-blue-500" />
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (error) {
