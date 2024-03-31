@@ -1,6 +1,5 @@
 // components/PromptItem.tsx
 import React from "react";
-import { Prompt } from "../interfaces/Prompt";
 import Link from "next/link"; // Import the Link component from Next.js
 import {
   FaRegHeart,
@@ -9,9 +8,10 @@ import {
   FaArrowUp,
   FaFlag,
 } from "react-icons/fa6";
+import { EnrichedPrompt } from "@/prisma/queries";
 
 interface PromptItemProps {
-  prompt: Prompt;
+  prompt: EnrichedPrompt;
   // Functions to handle upvote, downvote, and favorite could be passed as props
 }
 

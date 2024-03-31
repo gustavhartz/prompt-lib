@@ -2,16 +2,18 @@
 import { Prisma, Post, VoteType } from "@prisma/client";
 import prisma from ".";
 
-export type Prompts = Post & {
+export type EnrichedPrompt = Post & {
   upVotes: number;
   downVotes: number;
   author: string;
+  userVote?: VoteType;
+  isFavorite?: boolean;
 };
 
 export const getPrompts = async (
   results = 20,
   page = 0,
-): Promise<Prompts[]> => {
+): Promise<EnrichedPrompt[]> => {
   if (results > 100) {
     throw new Error("Results must be less than or equal 100");
   }
@@ -45,11 +47,17 @@ export const getPrompts = async (
   p."createdAt" DESC
   LIMIT ${results} OFFSET ${page} * ${results}
   `;
-  const prompts = (await prisma.$queryRaw(query, results, page)) as Prompts[];
+  const prompts = (await prisma.$queryRaw(
+    query,
+    results,
+    page,
+  )) as EnrichedPrompt[];
   return prompts;
 };
 
-export const getPrompt = async (promptId: string): Promise<Prompts[]> => {
+export const getPrompt = async (
+  promptId: string,
+): Promise<EnrichedPrompt[]> => {
   const query = Prisma.sql`SELECT 
   p.id,
   p."createdAt",
@@ -78,7 +86,7 @@ export const getPrompt = async (promptId: string): Promise<Prompts[]> => {
   LEFT JOIN "User" u ON u.id = p."authorId"
   WHERE p.id = ${promptId}
   `;
-  const prompts = (await prisma.$queryRaw(query, promptId)) as Prompts[];
+  const prompts = (await prisma.$queryRaw(query, promptId)) as EnrichedPrompt[];
   return prompts;
 };
 
@@ -86,7 +94,7 @@ export const getLikedPrompts = async (
   results = 20,
   page = 0,
   userId: string,
-): Promise<Prompts[]> => {
+): Promise<EnrichedPrompt[]> => {
   if (results > 100) {
     throw new Error("Results must be less than or equal 100");
   }
@@ -121,7 +129,11 @@ export const getLikedPrompts = async (
   p."createdAt" DESC
   LIMIT ${results} OFFSET ${page} * ${results}
   `;
-  const prompts = (await prisma.$queryRaw(query, results, page)) as Prompts[];
+  const prompts = (await prisma.$queryRaw(
+    query,
+    results,
+    page,
+  )) as EnrichedPrompt[];
   return prompts;
 };
 
@@ -129,7 +141,7 @@ export const searchPrompts = async (
   results = 20,
   page = 0,
   searchQuery: string,
-): Promise<Prompts[]> => {
+): Promise<EnrichedPrompt[]> => {
   if (results > 100) {
     throw new Error("Results must be less than or equal 100");
   }
@@ -164,6 +176,10 @@ export const searchPrompts = async (
   p."createdAt" DESC
   LIMIT ${results} OFFSET ${page} * ${results}
   `;
-  const prompts = (await prisma.$queryRaw(query, results, page)) as Prompts[];
+  const prompts = (await prisma.$queryRaw(
+    query,
+    results,
+    page,
+  )) as EnrichedPrompt[];
   return prompts;
 };

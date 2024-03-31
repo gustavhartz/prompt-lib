@@ -10,8 +10,8 @@ import { getSession } from "@auth0/nextjs-auth0";
 export const titleLengthCharLimit = 100;
 export const descriptionLengthCharLimit = 500;
 export const promptLengthCharLimit = 4 * 3200;
-export const tagsLengthCharLimit = 40;
 export const tagsCountLimit = 10;
+export const tagsLengthCharLimit = 40 * tagsCountLimit;
 
 export type GetPromptRequest = {
   promptId?: string;

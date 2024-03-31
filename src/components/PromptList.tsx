@@ -1,15 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Prompt } from "../interfaces/Prompt";
 import PromptItem from "./PromptItem";
 import { AiOutlineLoading3Quarters } from "react-icons/ai"; // Import the loading icon
+import { EnrichedPrompt } from "@/prisma/queries";
 
 interface PromptListProps {
-  initialPrompts: Prompt[];
+  initialPrompts: EnrichedPrompt[];
 }
 
 const PromptList: React.FC<PromptListProps> = ({ initialPrompts }) => {
-  const [prompts, setPrompts] = useState<Prompt[]>(initialPrompts);
+  const [prompts, setPrompts] = useState<EnrichedPrompt[]>(initialPrompts);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true); // State to track if more items are available
 
@@ -37,7 +37,7 @@ const PromptList: React.FC<PromptListProps> = ({ initialPrompts }) => {
   }, []);
 
   // Placeholder function to simulate fetching more prompts
-  const fetchMorePrompts = async (): Promise<Prompt[]> => {
+  const fetchMorePrompts = async (): Promise<EnrichedPrompt[]> => {
     // Replace with your API call
     await new Promise((resolve) => setTimeout(resolve, 1500)); // Mock loading delay
     return []; // Return an empty array to simulate no more prompts

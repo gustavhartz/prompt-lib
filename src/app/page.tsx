@@ -2,7 +2,7 @@ import React from "react";
 import PageLayout from "../components/PageLayout"; // Adjust the path as necessary
 import PromptsManager from "@/components/PromptManager";
 import { cache } from "react";
-import { getTopPrompts } from "@/prisma/queries";
+import { getPrompts } from "@/prisma/queries";
 import { getSession } from "@auth0/nextjs-auth0";
 
 interface HomeProps {
@@ -11,8 +11,12 @@ interface HomeProps {
 export const getPromptsSSR = cache(async () => {
   //TODO: relevant to the user with their likes etc.
   const session = await getSession();
-  const userId = session?.user.sub;
-  const prompts = await getTopPrompts(20, 0, userId);
+  const prompts = await getPrompts(20, 0);
+
+  if (!session) {
+    return prompts;
+  }
+  // Get the prompts with the user's likes and vote
   return prompts;
 });
 
