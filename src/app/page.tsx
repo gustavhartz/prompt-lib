@@ -2,15 +2,18 @@ import React from "react";
 import PageLayout from "../components/PageLayout"; // Adjust the path as necessary
 import PromptsManager from "@/components/PromptManager";
 import { cache } from "react";
-import { getTopPrompts } from "@/prisma/rawQueries";
+import { getTopPrompts } from "@/prisma/queries";
+import { getSession } from "@auth0/nextjs-auth0";
 
 interface HomeProps {
   prompts: ""; // Assuming your Post model corresponds to your prompts
 }
 export const getPromptsSSR = cache(async () => {
   //TODO: relevant to the user with their likes etc.
-  const item = await getTopPrompts(20, 0);
-  return item;
+  const session = await getSession();
+  const userId = session?.user.sub;
+  const prompts = await getTopPrompts(20, 0, userId);
+  return prompts;
 });
 
 export default async function Home({ prompts }: HomeProps) {

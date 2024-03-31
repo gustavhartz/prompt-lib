@@ -14,8 +14,9 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String
+  id        String   @id // Auth0 sub - unique identifier
+  username  String?  @unique
+  lastLogin DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Post      Post[]
