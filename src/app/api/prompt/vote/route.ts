@@ -1,4 +1,5 @@
 import prisma from "@/prisma";
+import { logger } from "@/utils/logger";
 import { getSession } from "@auth0/nextjs-auth0";
 import { VoteType } from "@prisma/client";
 
@@ -8,7 +9,7 @@ type PostPromptVoteRequest = {
 };
 
 export const POST = async (req: Request) => {
-  //TODO: vote on prompt
+  logger.info("API: Prompt Vote POST");
   const { promptId, vote }: PostPromptVoteRequest = await req.json();
   // validate input
   if (!promptId || !vote) {

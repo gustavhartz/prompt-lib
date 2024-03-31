@@ -5,6 +5,7 @@ import {
   getPrompts,
   searchPrompts,
 } from "@/prisma/queries";
+import { logger } from "@/utils/logger";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export const titleLengthCharLimit = 100;
@@ -28,7 +29,7 @@ export type PostPromptRequest = {
 };
 
 export const GET = async (req: Request) => {
-  //TODO: Return prompt
+  logger.info("API: Prompt GET");
   const { promptId, query, page, results }: GetPromptRequest = await req.json();
 
   if (promptId && query) {
@@ -46,7 +47,7 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
-  //TODO: Save prompt / Create new prompt
+  logger.info("API: Prompt POST");
   const { title, description, prompt, tags }: PostPromptRequest =
     await req.json();
   const session = await getSession();

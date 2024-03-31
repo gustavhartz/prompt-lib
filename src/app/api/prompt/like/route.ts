@@ -1,6 +1,7 @@
 import prisma from "@/prisma";
 import { getLikedPrompts } from "@/prisma/queries";
 import { getSession } from "@auth0/nextjs-auth0";
+import { logger } from "@/utils/logger";
 
 type GetPromptLikeRequest = {
   promptId: string;
@@ -9,6 +10,7 @@ type GetPromptLikeRequest = {
 };
 
 export const GET = async (req: Request) => {
+  logger.info("API: Prompt Like GET");
   // validate input
   const { promptId, results, page }: GetPromptLikeRequest = await req.json();
 
@@ -34,6 +36,7 @@ type PostPromptLikeRequest = {
 };
 
 export const POST = async (req: Request) => {
+  logger.info("API: Prompt Like POST");
   const session = await getSession();
   const userId = session?.user.sub;
   if (!userId) {

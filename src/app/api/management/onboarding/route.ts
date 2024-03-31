@@ -13,7 +13,7 @@ export type onboardingRequest = {
 };
 
 export async function POST(request: Request) {
-  logger.info("Onboarding request");
+  logger.info("API: Onboarding POST");
   let session = await getSession();
 
   // Check if the user is authenticated
