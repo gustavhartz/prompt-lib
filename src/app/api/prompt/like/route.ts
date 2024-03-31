@@ -2,19 +2,15 @@ import prisma from "@/prisma";
 import { getLikedPrompts } from "@/prisma/queries";
 import { getSession } from "@auth0/nextjs-auth0";
 
-type GetLikePromptRequest = {
-  postId: string;
+type GetPromptLikeRequest = {
+  promptId: string;
   results: number;
   page: number;
 };
 
 export const GET = async (req: Request) => {
   // validate input
-  const {
-    postId: promptId,
-    results,
-    page,
-  }: GetLikePromptRequest = await req.json();
+  const { promptId, results, page }: GetPromptLikeRequest = await req.json();
 
   if (!promptId) {
     return new Response("Missing required fields", { status: 400 });
@@ -33,7 +29,7 @@ export const GET = async (req: Request) => {
   return new Response(JSON.stringify(data), { status: 200 });
 };
 
-type PostLikePromptRequest = {
+type PostPromptLikeRequest = {
   postId: string;
 };
 
@@ -44,7 +40,7 @@ export const POST = async (req: Request) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const { postId: promptId }: PostLikePromptRequest = await req.json();
+  const { postId: promptId }: PostPromptLikeRequest = await req.json();
   if (!promptId) {
     return new Response("Missing required fields", { status: 400 });
   }

@@ -2,20 +2,19 @@
 import { Prisma, Post, VoteType } from "@prisma/client";
 import prisma from ".";
 
-type TopPosts = Post & {
+export type Prompts = Post & {
   upVotes: number;
   downVotes: number;
-  reports: number;
   author: string;
-  userVote: VoteType;
-  isFavorite: boolean;
 };
 
-export const getTopPrompts = async (
+export const getPrompts = async (
   results = 20,
   page = 0,
-  userId = "",
-): Promise<TopPosts[]> => {
+): Promise<Prompts[]> => {
+  if (results > 100) {
+    throw new Error("Results must be less than or equal 100");
+  }
   const query = Prisma.sql`SELECT 
   p.id,
   p."createdAt",
@@ -26,9 +25,7 @@ export const getTopPrompts = async (
   voteCounts."upVotes",
   voteCounts."downVotes",
   voteCounts.reports,
-  u.username,
-  userVote.value AS userVoteValue,
-  COALESCE(userLike."postId", 'false') AS userLiked
+  u.username
   FROM 
   "Post" p
   LEFT JOIN (
@@ -43,26 +40,130 @@ export const getTopPrompts = async (
       v."postId"
   ) AS voteCounts ON voteCounts."postId" = p.id
   LEFT JOIN "User" u ON u.id = p."authorId"
-  LEFT JOIN (
-  SELECT "postId", "value" 
-  FROM "Vote" 
-  WHERE "userId" = ${userId}
-  ) AS userVote ON userVote."postId" = p.id
-  LEFT JOIN (
-  SELECT "postId" 
-  FROM "Like" 
-  WHERE "userId" = ${userId}
-  ) AS userLike ON userLike."postId" = p.id 
   ORDER BY 
   voteCounts."upVotes" DESC, 
   p."createdAt" DESC
   LIMIT ${results} OFFSET ${page} * ${results}
   `;
-  const prompts = (await prisma.$queryRaw(
-    query,
-    results,
-    page,
-    userId,
-  )) as TopPosts[];
+  const prompts = (await prisma.$queryRaw(query, results, page)) as Prompts[];
+  return prompts;
+};
+
+export const getPrompt = async (promptId: string): Promise<Prompts[]> => {
+  const query = Prisma.sql`SELECT 
+  p.id,
+  p."createdAt",
+  p.title,
+  p.description,
+  p.prompt,
+  p.tags,
+  voteCounts."upVotes",
+  voteCounts."downVotes",
+  voteCounts.reports,
+  u.username
+  FROM 
+  "Post" p
+  LEFT JOIN (
+  SELECT 
+      v."postId",
+      COUNT(*) FILTER (WHERE v."value" = 'UPVOTE') AS "upVotes",
+      COUNT(*) FILTER (WHERE v."value" = 'DOWNVOTE') AS "downVotes",
+      COUNT(*) FILTER (WHERE v."value" = 'REPORT') AS reports
+  FROM 
+      "Vote" v
+  WHERE v."postId" = ${promptId}   
+  GROUP BY 
+      v."postId"
+  ) AS voteCounts ON voteCounts."postId" = p.id
+  LEFT JOIN "User" u ON u.id = p."authorId"
+  WHERE p.id = ${promptId}
+  `;
+  const prompts = (await prisma.$queryRaw(query, promptId)) as Prompts[];
+  return prompts;
+};
+
+export const getLikedPrompts = async (
+  results = 20,
+  page = 0,
+  userId: string,
+): Promise<Prompts[]> => {
+  if (results > 100) {
+    throw new Error("Results must be less than or equal 100");
+  }
+  const query = Prisma.sql`SELECT 
+  p.id,
+  p."createdAt",
+  p.title,
+  p.description,
+  p.prompt,
+  p.tags,
+  voteCounts."upVotes",
+  voteCounts."downVotes",
+  voteCounts.reports,
+  u.username
+  FROM 
+  "Post" p
+  LEFT JOIN (
+  SELECT 
+      v."postId",
+      COUNT(*) FILTER (WHERE v."value" = 'UPVOTE') AS "upVotes",
+      COUNT(*) FILTER (WHERE v."value" = 'DOWNVOTE') AS "downVotes",
+      COUNT(*) FILTER (WHERE v."value" = 'REPORT') AS reports
+  FROM 
+      "Vote" v   
+  GROUP BY 
+      v."postId"
+  ) AS voteCounts ON voteCounts."postId" = p.id
+  LEFT JOIN "User" u ON u.id = p."authorId"
+  where p.id in (select "postId" from "Like" l where l."userId"=${userId})
+  ORDER BY 
+  voteCounts."upVotes" DESC, 
+  p."createdAt" DESC
+  LIMIT ${results} OFFSET ${page} * ${results}
+  `;
+  const prompts = (await prisma.$queryRaw(query, results, page)) as Prompts[];
+  return prompts;
+};
+
+export const searchPrompts = async (
+  results = 20,
+  page = 0,
+  searchQuery: string,
+): Promise<Prompts[]> => {
+  if (results > 100) {
+    throw new Error("Results must be less than or equal 100");
+  }
+  const query = Prisma.sql`SELECT 
+  p.id,
+  p."createdAt",
+  p.title,
+  p.description,
+  p.prompt,
+  p.tags,
+  voteCounts."upVotes",
+  voteCounts."downVotes",
+  voteCounts.reports,
+  u.username
+  FROM 
+  "Post" p
+  LEFT JOIN (
+  SELECT 
+      v."postId",
+      COUNT(*) FILTER (WHERE v."value" = 'UPVOTE') AS "upVotes",
+      COUNT(*) FILTER (WHERE v."value" = 'DOWNVOTE') AS "downVotes",
+      COUNT(*) FILTER (WHERE v."value" = 'REPORT') AS reports
+  FROM 
+      "Vote" v   
+  GROUP BY 
+      v."postId"
+  ) AS voteCounts ON voteCounts."postId" = p.id
+  LEFT JOIN "User" u ON u.id = p."authorId"
+  where p.title ILIKE ${searchQuery} OR p.description ILIKE ${searchQuery} OR p.prompt ILIKE ${searchQuery}
+  ORDER BY 
+  voteCounts."upVotes" DESC, 
+  p."createdAt" DESC
+  LIMIT ${results} OFFSET ${page} * ${results}
+  `;
+  const prompts = (await prisma.$queryRaw(query, results, page)) as Prompts[];
   return prompts;
 };

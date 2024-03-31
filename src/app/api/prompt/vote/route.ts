@@ -2,14 +2,14 @@ import prisma from "@/prisma";
 import { getSession } from "@auth0/nextjs-auth0";
 import { VoteType } from "@prisma/client";
 
-type VotePromtRequest = {
+type PostPromptVoteRequest = {
   promptId: string;
   vote: VoteType;
 };
 
 export const POST = async (req: Request) => {
   //TODO: vote on prompt
-  const { promptId, vote }: VotePromtRequest = await req.json();
+  const { promptId, vote }: PostPromptVoteRequest = await req.json();
   // validate input
   if (!promptId || !vote) {
     return new Response("Missing required fields", { status: 400 });
