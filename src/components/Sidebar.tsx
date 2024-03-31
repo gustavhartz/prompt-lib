@@ -3,15 +3,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Import usePathname
 import { IconType } from "react-icons";
-import {
-  FaHouse,
-  FaTrophy,
-  FaHeart,
-  FaTrain,
-  FaWandSparkles,
-  FaInfo,
-  FaPerson,
-} from "react-icons/fa6";
+import { FaHouse, FaHeart, FaTrain, FaWandSparkles } from "react-icons/fa6";
 
 interface NavItem {
   href: string;
@@ -22,10 +14,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { href: "/", icon: FaHouse, title: "Home" },
-  { href: "/rankings", icon: FaTrophy, title: "Rankings" },
   { href: "/likes", icon: FaHeart, title: "Favorites" },
-  { href: "/about", icon: FaInfo, title: "About" },
-  { href: "/profile", icon: FaPerson, title: "Profile" },
 ];
 
 // include isAuthed in the props
