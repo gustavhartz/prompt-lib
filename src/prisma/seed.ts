@@ -19,6 +19,8 @@ async function main() {
     data: [...Array(3)].map(() => ({
       // Corrected from Array.from({ length: 3 }) for consistency
       username: randomText(10),
+      id: randomText(10),
+      lastLogin: new Date(),
     })),
     skipDuplicates: true, // Skip if duplicate usernames exist (optional)
   });
@@ -50,19 +52,6 @@ async function main() {
         },
       }),
     ),
-  );
-
-  // Create a like for each post by a random user
-  await Promise.all(
-    posts.map((post) => {
-      const randomUser = users[Math.floor(Math.random() * users.length)];
-      return prisma.like.create({
-        data: {
-          user: { connect: { id: randomUser.id } },
-          post: { connect: { id: post.id } },
-        },
-      });
-    }),
   );
 }
 

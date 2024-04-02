@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaBars, FaHouse, FaHeart } from "react-icons/fa6";
+import { FaBars, FaHouse } from "react-icons/fa6";
 import { IoMdClose } from "react-icons/io";
 import { IconType } from "react-icons";
 
@@ -12,10 +12,7 @@ interface NavItem {
   icon: IconType;
 }
 
-const navItems: NavItem[] = [
-  { href: "/", title: "Home", icon: FaHouse },
-  { href: "/likes", title: "Favorites", icon: FaHeart },
-];
+const navItems: NavItem[] = [{ href: "/", title: "Home", icon: FaHouse }];
 
 interface HeaderProps {
   isAuthed: boolean;
