@@ -38,11 +38,11 @@ const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
       <div className="flex items-center justify-start mt-4 border-t border-gray-200 pt-2">
         <button className="flex items-center text-green-500 mr-4">
           <FaArrowUp className="text-lg" />
-          <span className="ml-1">{prompt.upVotes}</span>
+          <span className="ml-1">{Number(prompt.upVotes)}</span>
         </button>
         <button className="flex items-center text-red-500 mr-4">
           <FaArrowDown className="text-lg" />
-          <span className="ml-1">{prompt.downVotes}</span>
+          <span className="ml-1">{Number(prompt.downVotes)}</span>
         </button>
         <button className="flex items-center text-gray-500">
           <FaFlag className="text-lg" />

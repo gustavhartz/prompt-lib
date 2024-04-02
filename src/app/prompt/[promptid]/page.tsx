@@ -40,7 +40,8 @@ export default async function Page({
           </div>
           <PromptAction prompt={entry.prompt} />
           <div className="px-6 py-4 bg-gray-100 text-sm text-gray-600">
-            Upvotes: {entry.upVotes} | Downvotes: {entry.downVotes}
+            Upvotes: {Number(entry.upVotes)} | Downvotes:{" "}
+            {Number(entry.downVotes)}
           </div>
         </div>
       </div>

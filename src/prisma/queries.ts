@@ -3,8 +3,9 @@ import { Prisma, Post, VoteType } from "@prisma/client";
 import prisma from ".";
 
 export type EnrichedPrompt = Post & {
-  upVotes: number;
-  downVotes: number;
+  upVotes: bigint;
+  downVotes: bigint;
+  reports: bigint;
   author: string;
   userVote?: VoteType;
   isFavorite?: boolean;
