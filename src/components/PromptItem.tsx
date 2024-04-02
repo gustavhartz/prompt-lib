@@ -10,6 +10,32 @@ interface PromptItemProps {
 
 const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
   const promptDetailPath = `/prompt/${prompt.id}`;
+  const handleVote = async (voteType: "UPVOTE" | "DOWNVOTE" | "REPORT") => {
+    console.log("Voting", voteType);
+    try {
+      const response = await fetch("api/prompt/vote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          promptId: prompt.id,
+          vote: voteType,
+        }),
+      });
+      if (!response.ok) {
+        // Handle response error
+        const errorData = await response.json();
+        alert(errorData.message || "An error occurred");
+      } else {
+        // Optionally, refresh the prompt to show updated vote counts
+        // Or update state directly if managing it locally
+      }
+    } catch (error) {
+      console.error("Failed to submit vote", error);
+      alert("Failed to submit vote");
+    }
+  };
 
   return (
     <div className="border-b border-gray-200 p-4 rounded-md shadow-sm bg-white">
@@ -36,15 +62,24 @@ const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
       </Link>
       <p className="text-gray-600 mt-2">{prompt.description}</p>
       <div className="flex items-center justify-start mt-4 border-t border-gray-200 pt-2">
-        <button className="flex items-center text-green-500 mr-4">
+        <button
+          onClick={() => handleVote("UPVOTE")}
+          className="flex items-center text-green-500 mr-4"
+        >
           <FaArrowUp className="text-lg" />
           <span className="ml-1">{Number(prompt.upVotes)}</span>
         </button>
-        <button className="flex items-center text-red-500 mr-4">
+        <button
+          onClick={() => handleVote("DOWNVOTE")}
+          className="flex items-center text-red-500 mr-4"
+        >
           <FaArrowDown className="text-lg" />
           <span className="ml-1">{Number(prompt.downVotes)}</span>
         </button>
-        <button className="flex items-center text-gray-500">
+        <button
+          onClick={() => handleVote("REPORT")}
+          className="flex items-center text-gray-500"
+        >
           <FaFlag className="text-lg" />
         </button>
       </div>
