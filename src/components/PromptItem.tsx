@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { FaArrowDown, FaArrowUp, FaFlag } from "react-icons/fa6";
 import { formatDistanceToNow } from "date-fns"; // For "xx days ago" format
@@ -9,27 +9,43 @@ interface PromptItemProps {
 }
 
 const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
+  // The deep link to the prompt detail page
   const promptDetailPath = `/prompt/${prompt.id}`;
+
+  // Voting logic
+  const [voteCooldown, setVoteCooldown] = useState(false);
+  const [localUpVotes, setLocalUpVotes] = useState(Number(prompt.upVotes));
+  const [localDownVotes, setLocalDownVotes] = useState(
+    Number(prompt.downVotes),
+  );
+
   const handleVote = async (voteType: "UPVOTE" | "DOWNVOTE" | "REPORT") => {
-    console.log("Voting", voteType);
+    if (voteCooldown) {
+      alert("Please wait before voting again.");
+      return;
+    }
+
+    setVoteCooldown(true);
+    setTimeout(() => setVoteCooldown(false), 5000); // 5 second cooldown
+
     try {
       const response = await fetch("api/prompt/vote", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          promptId: prompt.id,
-          vote: voteType,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ promptId: prompt.id, vote: voteType }),
       });
+
       if (!response.ok) {
         // Handle response error
         const errorData = await response.json();
         alert(errorData.message || "An error occurred");
       } else {
-        // Optionally, refresh the prompt to show updated vote counts
-        // Or update state directly if managing it locally
+        // Update local vote counts for instant feedback
+        if (voteType === "UPVOTE") {
+          setLocalUpVotes((current) => current + 1);
+        } else if (voteType === "DOWNVOTE") {
+          setLocalDownVotes((current) => current + 1);
+        }
       }
     } catch (error) {
       console.error("Failed to submit vote", error);
@@ -67,14 +83,14 @@ const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
           className="flex items-center text-green-500 mr-4"
         >
           <FaArrowUp className="text-lg" />
-          <span className="ml-1">{Number(prompt.upVotes)}</span>
+          <span className="ml-1">{localUpVotes}</span>
         </button>
         <button
           onClick={() => handleVote("DOWNVOTE")}
           className="flex items-center text-red-500 mr-4"
         >
           <FaArrowDown className="text-lg" />
-          <span className="ml-1">{Number(prompt.downVotes)}</span>
+          <span className="ml-1">{localDownVotes}</span>
         </button>
         <button
           onClick={() => handleVote("REPORT")}
