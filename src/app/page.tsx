@@ -25,10 +25,9 @@ export default async function Home({ prompts }: HomeProps) {
   const topPrompts = await getPromptsSSR();
   return (
     <PageLayout>
-      <div className="container mx-auto my-8">
+      <div className="container mx-auto my-8 flex flex-col min-h-screen">
         <HeroSearch />
-        {/* Add a div with vertical margin or padding here for spacing */}
-        <div className="mt-8">
+        <div className="mt-8 flex-1">
           <PromptList initialPrompts={topPrompts} />
         </div>
       </div>
