@@ -11,13 +11,8 @@ interface HomeProps {
 }
 export const getPromptsSSR = cache(async () => {
   //TODO: relevant to the user with their likes etc.
-  const session = await getSession();
   const prompts = await getPrompts(20, 0);
 
-  if (!session) {
-    return prompts;
-  }
-  // Get the prompts with the user's likes and vote
   return prompts;
 });
 
