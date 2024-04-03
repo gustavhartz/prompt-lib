@@ -28,7 +28,7 @@ export const getPrompts = async (
   voteCounts."upVotes",
   voteCounts."downVotes",
   voteCounts.reports,
-  u.username
+  u.username as author
   FROM 
   "Post" p
   LEFT JOIN (
@@ -69,7 +69,7 @@ export const getPrompt = async (
   voteCounts."upVotes",
   voteCounts."downVotes",
   voteCounts.reports,
-  u.username
+  u.username as author
   FROM 
   "Post" p
   LEFT JOIN (
@@ -156,7 +156,7 @@ export const searchPrompts = async (
   voteCounts."upVotes",
   voteCounts."downVotes",
   voteCounts.reports,
-  u.username
+  u.username as author
   FROM 
   "Post" p
   LEFT JOIN (
