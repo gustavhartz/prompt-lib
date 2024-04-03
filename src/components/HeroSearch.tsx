@@ -54,6 +54,12 @@ const HeroSearch = () => {
             </button>
           </div>
         </form>
+        <button
+          onClick={handleNavigateToSubmitPrompt}
+          className="bg-green-500 hover:bg-green-700 mt-4 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"
+        >
+          Submit Prompt
+        </button>
       </div>
     </div>
   );
