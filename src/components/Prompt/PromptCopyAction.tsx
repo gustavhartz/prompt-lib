@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { toast } from "react-hot-toast";
 
 interface PromptActionProps {
   prompt: string;
@@ -8,8 +9,7 @@ interface PromptActionProps {
 const PromptAction: React.FC<PromptActionProps> = ({ prompt }) => {
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(prompt);
-    // Replace alert with a more sophisticated feedback mechanism as needed
-    alert("Copied to clipboard!");
+    toast.success("Copied to clipboard"); // Displays a success message
   };
   console.log("PromptActionProps", prompt);
 

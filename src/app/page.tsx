@@ -12,7 +12,7 @@ interface HomeProps {
 export const getPromptsSSR = cache(async () => {
   //TODO: relevant to the user with their likes etc.
   const prompts = await getPrompts(20, 0);
-
+  console.log(prompts);
   return prompts;
 });
 
