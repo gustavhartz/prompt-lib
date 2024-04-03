@@ -16,7 +16,7 @@ export const getPrompts = async (
   page = 0,
 ): Promise<EnrichedPrompt[]> => {
   if (results > 100) {
-    throw new Error("Results must be less than or equal 100");
+    results = 100;
   }
   const query = Prisma.sql`SELECT 
   p.id,
@@ -97,7 +97,7 @@ export const searchPrompts = async (
   searchQuery: string,
 ): Promise<EnrichedPrompt[]> => {
   if (results > 100) {
-    throw new Error("Results must be less than or equal 100");
+    results = 100;
   }
   const query = Prisma.sql`SELECT 
   p.id,
