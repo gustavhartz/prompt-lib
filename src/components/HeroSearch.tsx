@@ -1,14 +1,18 @@
 "use client";
-import React, { ChangeEvent, useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import React, { useState } from "react";
+import { usePathname, useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useSearchParams } from "next/navigation";
 import { FaSearch } from "react-icons/fa"; // Importing search icon
 
 const HeroSearch = () => {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter(); // Use the router for navigation
 
-  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
   };
 
   // Function to handle search submission
@@ -16,7 +20,14 @@ const HeroSearch = () => {
     event.preventDefault(); // Prevent default form submission behavior
     // Redirect user to search results page, passing searchTerm as query parameter
     // Adjust the path as needed for your search page
-    router.push(`/search?query=${encodeURIComponent(searchTerm)}`);
+    const params = new URLSearchParams(searchParams);
+    const term = searchTerm;
+    if (term) {
+      params.set("query", term);
+    } else {
+      params.delete("query");
+    }
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   // Function to navigate to the submit prompt page
@@ -43,7 +54,10 @@ const HeroSearch = () => {
               type="search"
               placeholder="Search prompts..."
               value={searchTerm}
-              onChange={handleSearchChange}
+              onChange={(e) => {
+                handleSearchChange(e.target.value);
+              }}
+              defaultValue={searchParams.get("query")?.toString()}
               className="pl-4 pr-10 py-2 w-full border border-transparent focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-lg"
             />
             <button
