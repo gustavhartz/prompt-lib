@@ -1,10 +1,4 @@
 import prisma from "@/prisma";
-import {
-  EnrichedPrompt,
-  getPrompt,
-  getPrompts,
-  searchPrompts,
-} from "@/prisma/queries";
 import { logger } from "@/utils/logger";
 import { getSession } from "@auth0/nextjs-auth0";
 
@@ -26,24 +20,6 @@ export type PostPromptRequest = {
   description: string;
   prompt: string;
   tags: string[];
-};
-
-export const GET = async (req: Request) => {
-  logger.info("API: Prompt GET");
-  const { promptId, query, page, results }: GetPromptRequest = await req.json();
-
-  if (promptId && query) {
-    return new Response("Cannot have both promptId and query", { status: 400 });
-  }
-  let data: EnrichedPrompt | EnrichedPrompt[];
-  if (query) {
-    data = await searchPrompts(results, page, query);
-  }
-  if (promptId) {
-    data = await getPrompt(promptId);
-  }
-  data = await getPrompts(results, page);
-  return new Response(JSON.stringify(data), { status: 200 });
 };
 
 export const POST = async (req: Request) => {
