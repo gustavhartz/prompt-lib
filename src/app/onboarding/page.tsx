@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Onboarding() {
   const router = useRouter();
@@ -13,22 +14,20 @@ export default function Onboarding() {
 
   const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Submitting username", username);
     try {
       let res = await fetch("/api/management/onboarding", {
         method: "POST",
         body: JSON.stringify({ username: username }),
       });
-      console.log("Response", res);
       let json = await res.json();
-      console.log("JSON", json);
       if (res.status === 200) {
+        toast.success("Username submitted!");
         router.push("/");
       } else {
-        console.error("Failed to submit username");
+        toast.error(json.message);
       }
     } catch (e) {
-      console.error("Failed to submit username");
+      toast.error("Failed to submit username");
     }
   };
 

@@ -53,7 +53,6 @@ const PromptActionBar: React.FC<PromptActionBarProps> = ({
       }
       // Reporting logic can be implemented or handled differently as needed
     } catch (error) {
-      console.error("Failed to submit vote", error);
       toast.error("Failed to submit vote");
     }
   };

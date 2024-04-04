@@ -3,6 +3,7 @@ import React from "react";
 import Header from "./Header"; // Adjust the import path as necessary
 import { useUser } from "@auth0/nextjs-auth0/client";
 import LoadingScreen from "./LoadingScreen";
+import toast from "react-hot-toast";
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -16,7 +17,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   }
 
   if (error) {
-    console.error(error);
+    toast.error(error.message);
     return null; // or a more elaborate error handling
   }
 

@@ -5,7 +5,6 @@ import { getPrompts, searchPrompts } from "@/prisma/queries";
 import HeroSearch from "@/components/HeroSearch";
 import PromptList from "@/components/PromptList";
 import { logger } from "@/utils/logger";
-
 interface HomeProps {
   searchParams: { query?: string; page?: string; results?: string };
 }

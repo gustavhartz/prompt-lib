@@ -11,7 +11,6 @@ const PromptAction: React.FC<PromptActionProps> = ({ prompt }) => {
     await navigator.clipboard.writeText(prompt);
     toast.success("Copied to clipboard"); // Displays a success message
   };
-  console.log("PromptActionProps", prompt);
 
   return (
     <div className="px-4 pt-4 pb-2">
