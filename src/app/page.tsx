@@ -5,6 +5,7 @@ import { getPrompts, searchPrompts } from "@/prisma/queries";
 import HeroSearch from "@/components/HeroSearch";
 import PromptList from "@/components/PromptList";
 import { logger } from "@/utils/logger";
+import Pagination from "@/components/Pagination";
 interface HomeProps {
   searchParams: { query?: string; page?: string; results?: string };
 }
@@ -13,7 +14,8 @@ export const getPromptsSSR = cache(
     if (query) {
       return await searchPrompts(results, page, query);
     }
-    return await getPrompts(results, page);
+    let data = await getPrompts(results, page);
+    return data;
   },
 );
 
@@ -24,18 +26,28 @@ export default async function Home(props: HomeProps) {
   let parsedPage = 0;
   try {
     parsedResults = parseInt(results || "20");
-    parsedPage = parseInt(page || "0");
+    // Page is 0 indexed
+    parsedPage = parseInt(page || "1") - 1;
   } catch (e) {
     logger.error(e);
   }
-  const topPrompts = await getPromptsSSR(query, parsedResults, parsedPage);
+  const { data, totalCount } = await getPromptsSSR(
+    query,
+    parsedResults,
+    parsedPage,
+  );
 
   return (
     <PageLayout>
       <div className="container mx-auto my-8 flex flex-col min-h-screen">
         <HeroSearch />
         <div className="mt-8 flex-1">
-          <PromptList initialPrompts={topPrompts} />
+          <PromptList initialPrompts={data} />
+          <Pagination
+            totalCount={Number(totalCount)}
+            pageSize={parsedResults}
+            currentPage={parsedPage + 1}
+          />
         </div>
       </div>
     </PageLayout>

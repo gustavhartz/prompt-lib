@@ -1,4 +1,3 @@
-// Get the top x prompts with pagination
 import { Prisma, Post, VoteType } from "@prisma/client";
 import prisma from ".";
 
@@ -11,14 +10,22 @@ export type EnrichedPrompt = Post & {
   isFavorite?: boolean;
 };
 
+type PaginatedQuery<T> = {
+  data: T;
+  totalCount: BigInt;
+};
+
+type CountQueryResult = [{ count: BigInt }];
+
 export const getPrompts = async (
   results = 20,
   page = 0,
-): Promise<EnrichedPrompt[]> => {
+): Promise<PaginatedQuery<EnrichedPrompt[]>> => {
   if (results > 100) {
     results = 100;
   }
-  const query = Prisma.sql`SELECT 
+  const offset = page * results;
+  const queryData = Prisma.sql`SELECT 
   p.id,
   p."createdAt",
   p.title,
@@ -46,14 +53,18 @@ export const getPrompts = async (
   ORDER BY 
   voteCounts."upVotes" DESC, 
   p."createdAt" DESC
-  LIMIT ${results} OFFSET ${page} * ${results}
+  LIMIT ${results} OFFSET ${offset}
   `;
-  const prompts = (await prisma.$queryRaw(
-    query,
-    results,
-    page,
-  )) as EnrichedPrompt[];
-  return prompts;
+  const queryCount = Prisma.sql`SELECT COUNT(id) FROM "Post"`;
+  const [prompts, totalCount]: [EnrichedPrompt[], CountQueryResult] =
+    await prisma.$transaction([
+      prisma.$queryRaw(queryData, results, page),
+      prisma.$queryRaw(queryCount),
+    ]);
+  return {
+    data: prompts,
+    totalCount: totalCount[0].count,
+  };
 };
 
 export const getPrompt = async (
@@ -95,11 +106,11 @@ export const searchPrompts = async (
   results = 20,
   page = 0,
   searchQuery: string,
-): Promise<EnrichedPrompt[]> => {
+): Promise<PaginatedQuery<EnrichedPrompt[]>> => {
   if (results > 100) {
     results = 100;
   }
-  const query = Prisma.sql`SELECT 
+  const queryData = Prisma.sql`SELECT 
   p.id,
   p."createdAt",
   p.title,
@@ -130,10 +141,17 @@ export const searchPrompts = async (
   p."createdAt" DESC
   LIMIT ${results} OFFSET ${page} * ${results}
   `;
-  const prompts = (await prisma.$queryRaw(
-    query,
-    results,
-    page,
-  )) as EnrichedPrompt[];
-  return prompts;
+
+  const queryCount = Prisma.sql`SELECT COUNT(*) FROM "Post" where p.title ILIKE ${searchQuery} OR p.description ILIKE ${searchQuery} OR p.prompt ILIKE ${searchQuery}`;
+
+  const [prompts, totalCount]: [EnrichedPrompt[], CountQueryResult] =
+    await prisma.$transaction([
+      prisma.$queryRaw(queryData, results, page),
+      prisma.$queryRaw(queryCount),
+    ]);
+
+  return {
+    data: prompts,
+    totalCount: totalCount[0].count,
+  };
 };
