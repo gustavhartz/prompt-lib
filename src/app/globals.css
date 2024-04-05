@@ -8,11 +8,22 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+/* Override dark theme styles */
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-rgb: 0, 0, 0; /* Set text color to black */
+    --background-start-rgb: 214, 219, 220; /* Light theme background start */
+    --background-end-rgb: 255, 255, 255; /* Light theme background end */
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
   }
 }
 
