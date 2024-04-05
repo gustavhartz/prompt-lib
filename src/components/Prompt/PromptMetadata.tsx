@@ -16,7 +16,8 @@ const PromptMetadata: React.FC<PromptMetadataProps> = ({
   return (
     <div className="flex justify-between items-start">
       <span className="text-xs text-gray-500">
-        Author: {author} | {formatDistanceToNow(createdAt)} ago
+        Author: {author || "Unnamed user"} | {formatDistanceToNow(createdAt)}{" "}
+        ago
       </span>
       <div className="flex overflow-x-auto gap-1">
         {tags.map((tag, index) => (
