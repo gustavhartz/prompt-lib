@@ -155,3 +155,75 @@ export const searchPrompts = async (
     totalCount: totalCount[0].count,
   };
 };
+
+export const getLikedPrompts = async (
+  userId: string,
+  results = 20,
+  page = 0,
+): Promise<PaginatedQuery<EnrichedPrompt[]>> => {
+  if (results > 100) {
+    results = 100;
+  }
+  const offset = page * results;
+  const queryData = Prisma.sql`
+  select
+	p.id,
+	p."createdAt",
+	p.title,
+	p.description,
+	p.prompt,
+	p.tags,
+	voteCounts."upVotes",
+	voteCounts."downVotes",
+	voteCounts.reports,
+	u.username as author
+from
+	"Post" p
+left join (
+	select
+		v."postId",
+		COUNT(*) filter (
+	where
+		v."value" = 'UPVOTE') as "upVotes",
+		COUNT(*) filter (
+	where
+		v."value" = 'DOWNVOTE') as "downVotes",
+		COUNT(*) filter (
+	where
+		v."value" = 'REPORT') as reports
+	from
+		"Vote" v
+	group by
+		v."postId"
+  ) as voteCounts on
+	voteCounts."postId" = p.id
+left join "User" u on
+	u.id = p."authorId"
+left join "Like" l on
+	p.id = l."postId"
+where
+	l."userId" = ${userId}
+order by
+	l."createdAt" desc
+limit ${results} offset ${offset}
+  `;
+  const queryCount = Prisma.sql`
+select
+	COUNT(id)
+from
+	"Post" p
+left join "Like" l on
+	l."postId" = p.id
+where
+	l."userId" = ${userId}  
+  `;
+  const [prompts, totalCount]: [EnrichedPrompt[], CountQueryResult] =
+    await prisma.$transaction([
+      prisma.$queryRaw(queryData, results, page),
+      prisma.$queryRaw(queryCount),
+    ]);
+  return {
+    data: prompts,
+    totalCount: totalCount[0].count,
+  };
+};
