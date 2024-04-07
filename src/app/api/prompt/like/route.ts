@@ -4,6 +4,7 @@ import { logger } from "@/utils/logger";
 
 type PostPromptLikeRequest = {
   postId: string;
+  action: "like" | "unlike";
 };
 
 export const POST = async (req: Request) => {
@@ -14,14 +15,29 @@ export const POST = async (req: Request) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const { postId: promptId }: PostPromptLikeRequest = await req.json();
-  if (!promptId) {
+  const { postId: promptId, action }: PostPromptLikeRequest = await req.json();
+  if (!promptId || !action || !["like", "unlike"].includes(action)) {
     return new Response("Missing required fields", { status: 400 });
   }
 
-  // create like
-  await prisma.like.create({
-    data: {
+  if (action === "unlike") {
+    await prisma.like.deleteMany({
+      where: {
+        postId: promptId,
+        userId: userId,
+      },
+    });
+    return new Response("success", { status: 200 });
+  }
+  await prisma.like.upsert({
+    where: {
+      postId_userId: {
+        postId: promptId,
+        userId: userId,
+      },
+    },
+    update: {},
+    create: {
       postId: promptId,
       userId: userId,
     },
