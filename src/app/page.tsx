@@ -6,15 +6,16 @@ import HeroSearch from "@/components/HeroSearch";
 import PromptList from "@/components/PromptList";
 import { logger } from "@/utils/logger";
 import Pagination from "@/components/Pagination";
+import { getSession } from "@auth0/nextjs-auth0";
 interface HomeProps {
   searchParams: { query?: string; page?: string; results?: string };
 }
 export const getPromptsSSR = cache(
-  async (query?: string, results?: number, page?: number) => {
+  async (query?: string, results?: number, page?: number, userId?: string) => {
     if (query) {
-      return await searchPrompts(results, page, query);
+      return await searchPrompts(results, page, query, userId);
     }
-    let data = await getPrompts(results, page);
+    let data = await getPrompts(results, page, userId);
     return data;
   },
 );
@@ -31,10 +32,12 @@ export default async function Home(props: HomeProps) {
   } catch (e) {
     logger.error(e);
   }
+  const user = await getSession();
   const { data, totalCount } = await getPromptsSSR(
     query,
     parsedResults,
     parsedPage,
+    user?.user.sub,
   );
 
   return (

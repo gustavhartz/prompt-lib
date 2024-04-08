@@ -15,7 +15,7 @@ interface HomeProps {
 export const getPromptsSSR = cache(async (results?: number, page?: number) => {
   let user = await getSession();
   if (user?.user.sub) {
-    return await getLikedPrompts(user.user.sub, results, page);
+    return await getLikedPrompts(results, page, user.user.sub);
   } else {
     redirect("/api/auth/login");
   }

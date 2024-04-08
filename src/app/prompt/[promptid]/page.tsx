@@ -1,15 +1,16 @@
 import React, { cache } from "react";
-import PromptAction from "@/components/Prompt/PromptCopyAction";
 import { redirect } from "next/navigation";
 import { getPrompt } from "@/prisma/queries";
 import PageLayout from "@/components/PageLayout";
 import PromptMetadata from "@/components/Prompt/PromptMetadata";
 import PromptContent from "@/components/Prompt/PromptContent";
 import PromptActionBar from "@/components/Prompt/PromptActionBar";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export const getPromptsSSR = cache(async (promptid: string) => {
   //TODO: relevant to the user with their likes etc.
-  const prompt = getPrompt(promptid);
+  const user = await getSession();
+  const prompt = await getPrompt(promptid, user?.user.sub);
 
   return prompt;
 });
@@ -44,6 +45,7 @@ export default async function Page({
           promptId={prompt.id}
           initialUpVotes={Number(prompt.upVotes)}
           initialDownVotes={Number(prompt.downVotes)}
+          isLiked={prompt.isLiked}
         />
       </div>
     </PageLayout>
