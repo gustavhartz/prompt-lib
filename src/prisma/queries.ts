@@ -160,9 +160,9 @@ export const searchPrompts = async (
   searchQuery: string,
   userId?: string,
 ): Promise<PaginatedQuery<EnrichedPrompt[]>> => {
+  searchQuery = `%${searchQuery}%`;
   const queryData = searchPromptsQuery(results, page, searchQuery, userId);
   const queryCount = Prisma.sql`SELECT COUNT(*) FROM "Post" p where p.title ILIKE ${searchQuery} OR p.description ILIKE ${searchQuery} OR p.prompt ILIKE ${searchQuery}`;
-  console.log(queryData.statement);
   const [prompts, totalCount]: [EnrichedPrompt[], CountQueryResult] =
     await prisma.$transaction([
       prisma.$queryRaw(queryData, results, page),

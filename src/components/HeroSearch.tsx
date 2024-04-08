@@ -24,6 +24,7 @@ const HeroSearch = () => {
     const term = searchTerm;
     if (term) {
       params.set("query", term);
+      params.delete("page");
     } else {
       params.delete("query");
     }
