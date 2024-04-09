@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { logger } from "./utils/logger";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -28,7 +29,6 @@ export default async function middleware(request: NextRequest) {
     process.env.UPSTASH_REDIS_REST_URL &&
     process.env.UPSTASH_REDIS_REST_TOKEN
   ) {
-    console.log("Rate limiting is disabled in development mode");
     const ip = request.ip ?? "127.0.0.1";
     const { success, pending, limit, reset, remaining } = await ratelimit.limit(
       ip,
@@ -36,6 +36,10 @@ export default async function middleware(request: NextRequest) {
     const res = success
       ? NextResponse.next()
       : NextResponse.redirect(new URL("/blocked", request.url));
+
+    if (!success) {
+      logger.info(`Rate limit exceeded for IP: ${ip}, remaining: ${remaining}`);
+    }
 
     res.headers.set("X-RateLimit-Limit", limit.toString());
     res.headers.set("X-RateLimit-Remaining", remaining.toString());
