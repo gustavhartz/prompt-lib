@@ -24,9 +24,9 @@ const baseQuery = (promptId?: string, userId?: string) => {
       p.description,
       p.prompt,
       p.tags,
-      voteCounts."upVotes",
-      voteCounts."downVotes",
-      voteCounts.reports,
+      COALESCE(voteCounts."upVotes", 0) AS "upVotes",
+      COALESCE(voteCounts."downVotes", 0) AS "downVotes",
+      COALESCE(voteCounts.reports, 0) AS reports,
       u.username as author,
       ${
         userId
@@ -81,7 +81,7 @@ const getPromptsQuery = (results = 20, page = 0, userId?: string) => {
   return Prisma.sql`
   ${baseQuery(undefined, userId)}
   order by
-    voteCounts."upVotes" desc,
+    COALESCE(voteCounts."upVotes", 0) desc,
     p."createdAt" desc
   limit ${results} offset ${offset}
   `;
@@ -107,7 +107,7 @@ const searchPromptsQuery = (
   ${baseQuery(undefined, userId)}
   where p.title ILIKE ${searchQuery} OR p.description ILIKE ${searchQuery} OR p.prompt ILIKE ${searchQuery}
   order by
-    voteCounts."upVotes" desc,
+    COALESCE(voteCounts."upVotes", 0) desc,
     p."createdAt" desc
   limit ${results} offset ${offset}
   `;
