@@ -24,11 +24,11 @@ const PromptItem: React.FC<PromptItemProps> = ({ prompt }) => {
         description={prompt.description}
         link={promptDetailPath}
       />
-      <p className="text-gray-600 mt-2">{prompt.description}</p>
       <PromptActionBar
         promptId={prompt.id}
         initialUpVotes={Number(prompt.upVotes)}
         initialDownVotes={Number(prompt.downVotes)}
+        isLiked={prompt.isLiked}
       />
     </div>
   );
