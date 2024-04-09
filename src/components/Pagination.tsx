@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 interface PaginationProps {
   totalCount: number;
@@ -14,10 +14,14 @@ const Pagination: React.FC<PaginationProps> = ({
   currentPage,
 }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const params = new URLSearchParams(searchParams);
   const totalPages = Math.ceil(totalCount / pageSize);
 
   const goToPage = (page: number) => {
-    router.push(`/?page=${page}`);
+    params.set("page", page.toString());
+    router.replace(`${pathname}?${params.toString()}`);
   };
 
   return (
