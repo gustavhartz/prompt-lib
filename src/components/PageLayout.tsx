@@ -24,7 +24,18 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children }) => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header isAuthed={!!user} />
-      <main className="flex-1 p-8">{children}</main>
+      <main className="flex-1 p-8">
+        {children}
+        <footer className="text-center p-4 text-gray-600">
+          <a
+            href="https://github.com/gustavhartz/prompt-lib"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Source code 🚀
+          </a>
+        </footer>
+      </main>
     </div>
   );
 };
