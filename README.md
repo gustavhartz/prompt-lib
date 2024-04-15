@@ -1,38 +1,63 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Prompt lib
+
+Prompt Lib is an open-source platform designed to share and explore creative prompts for AI models like ChatGPT and image generators like MidJourney, and because it did not find a library i like. This repo includes some seed data from [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts), and will be extended to include more in the future. Built with Next.js, TypeScript, Prisma, and PostgreSQL,
+
+**Resources for prompts and guides:**
+* [Prompt engineering](https://github.com/dair-ai/Prompt-Engineering-Guide)
+* [Curated prompt list](https://github.com/f/awesome-chatgpt-prompts)
+* [Prompts from GPT agents](https://github.com/linexjlin/GPTs/tree/main)
+
+### Features
+* Prompt Browsing: Discover prompts submitted by the community.
+* Prompt Submission: Contribute your own prompts to the library.
+* Voting System: Upvote and downvote prompts to surface the most valuable content. There is also a report function. Currently, all votes are considered equal. If we get some users this will changed to be based on the authed users votes.
+* User Favorites: Save prompts you like for easy access later.
+* Rate Limiting: Ensures fair usage of the resources with Redis.
+* Fully Responsive: Accessible on any device from mobile to desktop. At least I tried to do this 🫠
+
+
+### Tech Stack
+* Frontend: Next.js, React, TailwindCSS
+* Backend: Node.js, Prisma ORM
+* Database: PostgreSQL
+* Rate Limiting: Redis
+* Deployment: Vercel
 
 ## Getting Started
 
-Create a .env.local file that contains the envs for Auth0
-
-First, run the development server:
+Create a `.env` file that contains the envs for Auth0, PostgreSQL 
 
 ```bash
+git clone https://github.com/gustavhartz/prompt-lib
+
+cd prompt-lib
+
+npm i
+
+# Fix the .env file
+
+npm run generate
+
+npx tsx src/prisma/seed.ts 
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contribute
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+No firm rules but try something like 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```
+<branch-type>/<branch-name>
+# example
+bug/database-connection-pool
+```
 
-## Learn More
+types include
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
+wip       Works in progress; stuff I know won't be finished soon
+feat      Feature I'm adding or expanding
+bug       Bug fix or experiment
+junk      Throwaway branch created to experiment
+```
