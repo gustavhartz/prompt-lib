@@ -5,27 +5,18 @@ import { logger } from "./utils/logger";
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(20, "10 s"),
+  limiter: Ratelimit.slidingWindow(10, "10 s"),
   //analytics: true,
   prefix: "@upstash/ratelimit",
 });
 // Define which routes you want to rate limit
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!_next/static|_next/image|favicon.ico|blocked|api/auth).*)",
-  ],
+  matcher: ["/api/prompt/:path*"],
 };
 
 export default async function middleware(request: NextRequest) {
   // disable rate limiting for development
   if (
-    process.env.NODE_ENV !== "development" &&
     process.env.UPSTASH_REDIS_REST_URL &&
     process.env.UPSTASH_REDIS_REST_TOKEN
   ) {
