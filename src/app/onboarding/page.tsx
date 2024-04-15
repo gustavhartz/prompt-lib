@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import HeroSection from "@/components/HeroSection";
 
 export default function Onboarding() {
   const router = useRouter();
@@ -33,25 +34,28 @@ export default function Onboarding() {
 
   return (
     <PageLayout>
-      <div className="container mx-auto p-4">
-        <h1 className="text-xl font-bold mb-4">Welcome to PromptLib!</h1>
-        <p>Please choose a username to complete your profile:</p>
-        <form onSubmit={handleSubmit} className="mt-4">
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={handleUsernameChange}
-            className="border p-2 rounded-lg mr-2"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Submit
-          </button>
-        </form>
-      </div>
+      <HeroSection
+        title="Welcome to PromptLib!"
+        description="Please choose a username to complete your profile:"
+      >
+        <div className="container mx-auto p-4">
+          <form onSubmit={handleSubmit} className="mt-4">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={handleUsernameChange}
+              className="border p-2 rounded-lg mr-2"
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Submit
+            </button>
+          </form>
+        </div>
+      </HeroSection>
     </PageLayout>
   );
 }
