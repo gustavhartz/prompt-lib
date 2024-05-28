@@ -2,6 +2,9 @@
 
 Prompt Lib is an open-source platform designed to share and explore creative prompts for AI models like ChatGPT and image generators like MidJourney, and because it did not find a library i like. This repo includes some seed data from [f/awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts), and will be extended to include more in the future. Built with Next.js, TypeScript, Prisma, and PostgreSQL,
 
+![UI](assets/ui1.png)
+![Promt](assets/ui2.png)
+
 **Resources for prompts and guides:**
 * [Prompt engineering](https://github.com/dair-ai/Prompt-Engineering-Guide)
 * [Curated prompt list](https://github.com/f/awesome-chatgpt-prompts)
